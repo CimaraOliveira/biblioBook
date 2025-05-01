@@ -1,0 +1,58 @@
+{% extends 'base.html' %}
+{%block conteudo%}
+
+<div class="card mb-3">
+    <div class="card-body register-card-body">
+      <p class="login-box-msg"><b>Registro de Livro</b></p>
+
+      <form action="{% url 'cadastro_livro' %}" method="POST">
+           {% csrf_token %}
+
+          <div class="form-group">
+              <label for="titulo">Título <span class="asteriskField">*</span></label>
+              <input class="form-control" name="titulo" id="titulo" type="text" value="{{request.POST.titulo}}"
+                     placeholder="Título do Livro" required autofocus>
+          </div>
+
+          <div class="form-group">
+              <label for="autor">Autor <span class="asteriskField">*</span></label>
+              <input class="form-control" name="autor" id="autor" type="text" value="{{request.POST.autor}}"
+                     placeholder="Autor do Livro" required autofocus>
+          </div>
+
+          <div class="form-group">
+              <label for="quantidade">Quantidade <span class="asteriskField">*</span></label>
+              <input class="form-control" name="quantidade" id="quantidade" type="text"  value="{{request.POST.quantidade}}"
+                     placeholder="Quantidade de Livros" required autofocus>
+          </div>
+
+          <div class="form-group">
+              <label for="isbn">Isbn <span class="asteriskField">*</span></label>
+              <input class="form-control" name="isbn" id="isbn" type="text" value="{{request.POST.isbn}}"
+                     placeholder="Isbn do Livro" required autofocus>
+          </div>
+
+          <div class="form-group">
+              <label for="ano_publicação">Ano Publicação <span class="asteriskField">*</span></label>
+              <input class="form-control" name="ano_publicação" id="ano_publicação" type="text" value="{{request.POST.ano_publicação}}"
+                     placeholder="Ano Publicação do Livro" required autofocus>
+          </div>
+           <div class="col-4">
+            <button type="submit" class="btn btn-primary btn-block">Register</button>
+          </div>
+
+          <div class="social-auth-links text-center">
+              <a href="#" class="btn btn-block btn-primary">
+                  Cadastrar
+              </a>
+              <a href="#" class="btn btn-block btn-danger">
+                  Cancelar
+              </a>
+          </div>
+
+
+      </form>
+    </div>
+</div>
+
+{%endblock%}

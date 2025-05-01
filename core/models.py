@@ -5,7 +5,7 @@ from django.contrib.auth.models import User
 class Livro(models.Model):
     titulo = models.CharField(max_length=200)
     autor = models.CharField(max_length=200)
-    quantidade = models.PositiveIntegerField(default=1)
+    quantidade = models.IntegerField()
     isbn = models.IntegerField(max_length=20)
     ano_publicação = models.CharField(max_length=200)
 
