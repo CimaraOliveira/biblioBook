@@ -9,6 +9,10 @@ class Livro(models.Model):
     isbn = models.IntegerField(max_length=20)
     ano_publicação = models.CharField(max_length=200)
 
+    class Meta:
+        verbose_name = 'Livro'
+        verbose_name_plural = 'Livros'
+
 
 class Reserva(models.Model):
     usuario = models.ForeignKey(User, on_delete=models.CASCADE)
