@@ -9,7 +9,7 @@
       <!-- Default box -->
       <div class="card">
         <div class="card-header">
-          <h3 class="card-title">Livros Disponíveis</h3>
+          <h3 class="card-title">Minhas Reservas</h3>
         </div>
 
         <div class="card-body p-0">
@@ -39,15 +39,15 @@
                   </tr>
               </thead>
 
-              {% for livro in livro %}
+              {% for reserva in reserva %}
               <tbody>
                   <tr>
                       <td>
-                          {{livro.id}}
+                          {{reserva.id}}
                       </td>
                       <td>
                           <a>
-                             {{livro.autor}}
+                             {{reserva.livro.autor}}
                           </a>
                           <br/>
                           <small>
@@ -91,11 +91,7 @@
                       </td>
                       <td class="project-actions text-right">
 
-                          <a class="btn btn-info btn-sm" href="{% url 'reservar_livro' livro.id %}">
-                              <i class="fas fa-pencil-alt">
-                              </i>
-                              Reservar
-                          </a>
+                         
 
                       </td>
                       {% endfor %}

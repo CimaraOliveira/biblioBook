@@ -1,5 +1,5 @@
 from django.shortcuts import render,redirect
-from .models import Livro
+from .models import Livro, Reserva
 from django.contrib import messages
 from django.core.paginator import Paginator
 
@@ -33,5 +33,25 @@ def listar_livros(request):
         'livro': livro
     }
     return render(request, "core/listar_livros.html", context)
+
+def reservar_livro(request, livro_id):
+    livro = Livro.objects.get(id=livro_id)
+    if livro.quantidade > 0:
+        Reserva.objects.create(usuario=request.user, livro=livro)
+        livro.quantidade -= 1
+        livro.save()
+        messages.success(request, "Livro Reservado com Sucesso!")
+    return redirect('listar_livros')
+
+
+def minhas_reservas(request):
+    reserva = Reserva.objects.filter(usuario=request.user.id)
+    paginator = Paginator(reserva, 6)
+    page = request.GET.get('p')
+    reserva = paginator.get_page(page)
+    context = {
+        'reserva': reserva
+    }
+    return render(request, "core/minhas_reservas.html", context)
 
 
