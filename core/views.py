@@ -1,4 +1,4 @@
-from django.shortcuts import render,redirect
+from django.shortcuts import render,redirect, get_object_or_404
 from .models import Livro, Reserva
 from django.contrib import messages
 from django.core.paginator import Paginator
@@ -35,23 +35,53 @@ def listar_livros(request):
     return render(request, "core/listar_livros.html", context)
 
 def reservar_livro(request, livro_id):
-    livro = Livro.objects.get(id=livro_id)
-    if livro.quantidade > 0:
+    livro = get_object_or_404(Livro, id=livro_id)
+    #Conta reservas ativas do usuário
+    reservas_ativas = Reserva.objects.filter(usuario=request.user, ativo=True).count()
+
+    if reservas_ativas >= 3:
+        messages.error(request, "Você já reservou 3 livros. Cancele uma reserva para fazer uma nova.")
+    elif not livro.disponivel:
+        messages.warning(request, "Este livro não está disponível no momento.")
+    else:
         Reserva.objects.create(usuario=request.user, livro=livro)
-        livro.quantidade -= 1
+        livro.disponivel = False
         livro.save()
-        messages.success(request, "Livro Reservado com Sucesso!")
+        messages.success(request, "Livro reservado com sucesso!")
     return redirect('listar_livros')
 
 
+def cancelar_reserva(request, reserva_id):
+    reserva = get_object_or_404(Reserva, pk=reserva_id, usuario=request.user)
+
+    if reserva.ativo:
+        reserva.ativo = False
+        reserva.save()
+
+        livro = reserva.livro
+        livro.disponivel = True
+        livro.save()
+
+        messages.success(request, "Reserva cancelada com sucesso.")
+    else:
+        messages.warning(request, "Esta reserva já foi cancelada.")
+
+    return redirect('minhas_reservas')
+
+
+
 def minhas_reservas(request):
-    reserva = Reserva.objects.filter(usuario=request.user.id)
+    reserva = Reserva.objects.filter(usuario=request.user.id, ativo=True)
+    reservas_canceladas = Reserva.objects.filter(usuario=request.user, ativo=False)
     paginator = Paginator(reserva, 6)
     page = request.GET.get('p')
     reserva = paginator.get_page(page)
-    context = {
-        'reserva': reserva
-    }
-    return render(request, "core/minhas_reservas.html", context)
+
+    return render(request, "core/minhas_reservas.html",
+                  {
+                      'reserva': reserva,
+                      'reservas_canceladas': reservas_canceladas,
+                  })
+
 
 
