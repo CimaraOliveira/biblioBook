@@ -1,8 +1,8 @@
 from django.shortcuts import render,redirect, get_object_or_404
-from .models import Livro, Reserva
+from .models import Livro, Reserva, Emprestimo
 from django.contrib import messages
 from django.core.paginator import Paginator
-
+from django.utils import timezone
 
 
 def index(request):
@@ -84,4 +84,44 @@ def minhas_reservas(request):
                   })
 
 
+def emprestar_livro(request, livro_id):
+    livro = get_object_or_404(Livro, pk=livro_id)
+    if livro.disponivel:
+        Emprestimo.objects.create(usuario=request.user, livro=livro)
+        livro.disponivel = False
+        livro.save()
+        messages.success(request, "Livro emprestado com sucesso!")
+    else:
+        messages.error(request, "Este livro não está disponível para empréstimo!")
+    return redirect('listar_livros')
+
+def devolver_livro(request, emprestimo_id):
+    emprestimo = get_object_or_404(Emprestimo, pk=emprestimo_id, usuario=request.user)
+    if not emprestimo.data_devolucao:
+        emprestimo.data_devolucao = timezone.now()
+        emprestimo.save()
+
+        livro = emprestimo.livro
+        livro.disponivel = True
+        livro.save()
+
+        messages.success(request, "Livro devolvido com sucesso.")
+    else:
+        messages.warning(request, "Este livro já foi devolvido.")
+    return redirect('meus_emprestimos')
+
+def renovar_emprestimo(request, emprestimo_id):
+    emprestimo = get_object_or_404(Emprestimo, pk=emprestimo_id, usuario=request.user)
+    if not emprestimo.renovado and not emprestimo.data_devolucao:
+        emprestimo.data_emprestimo = timezone.now()
+        emprestimo.renovado = True
+        emprestimo.save()
+        messages.success(request, "Empréstimo renovado por mais 7 dias.")
+    else:
+        messages.warning(request, "Não é possível renovar este empréstimo.")
+    return redirect('meus_emprestimos')
+
+def meus_emprestimos(request):
+    emprestimos = Emprestimo.objects.filter(usuario=request.user).order_by('-data_emprestimo')
+    return render(request, 'core/meus_emprestimos.html', {'emprestimos': emprestimos})
 

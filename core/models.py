@@ -1,6 +1,8 @@
 from django.db import models
 from django.contrib.auth.models import User
 from django.utils import timezone
+from datetime import timedelta
+
 
 
 class Livro(models.Model):
@@ -30,3 +32,18 @@ class Reserva(models.Model):
 
     def status_display(self):
         return "✅ Ativa" if self.ativo else "❌ Cancelada"
+
+class Emprestimo(models.Model):
+    usuario = models.ForeignKey(User, on_delete=models.CASCADE)
+    livro = models.ForeignKey(Livro, on_delete=models.CASCADE)
+    data_emprestimo = models.DateTimeField(auto_now_add=True)
+    data_devolucao = models.DateTimeField(null=True, blank=True)
+    renovado = models.BooleanField(default=False)
+
+    @property
+    def esta_atrasado(self):
+        prazo = self.data_emprestimo + timedelta(days=7)
+        return timezone.now() > prazo and not self.data_devolucao
+
+    def __str__(self):
+        return f"{self.usuario.username} - {self.livro.titulo}"

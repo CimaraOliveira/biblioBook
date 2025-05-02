@@ -1,0 +1,23 @@
+<h2>📚 Meus Empréstimos</h2>
+
+<ul>
+  {% for emp in emprestimos %}
+    <li>
+      {{ emp.livro.titulo }} -
+      {% if emp.data_devolucao %}
+        <span style="color: green;">Devolvido em {{ emp.data_devolucao|date:"d/m/Y" }}</span>
+      {% else %}
+        <span style="color: orange;">
+          Em andamento ({{ emp.data_emprestimo|date:"d/m/Y" }})
+          {% if emp.esta_atrasado %}❗ Atrasado{% endif %}
+        </span> —
+        <a href="{% url 'devolver_livro' emp.id %}">Devolver</a>
+        {% if not emp.renovado %}
+          | <a href="{% url 'renovar_emprestimo' emp.id %}">Renovar</a>
+        {% endif %}
+      {% endif %}
+    </li>
+  {% empty %}
+    <li>Você não possui empréstimos.</li>
+  {% endfor %}
+</ul>
