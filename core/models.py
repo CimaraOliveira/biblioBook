@@ -2,7 +2,7 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.utils import timezone
 from datetime import timedelta
-
+from django.conf import settings
 
 
 class Livro(models.Model):
@@ -10,7 +10,7 @@ class Livro(models.Model):
     autor = models.CharField(max_length=200)
     editora = models.CharField(max_length=100)
     quantidade = models.IntegerField()
-    isbn = models.IntegerField(max_length=20)
+    isbn = models.IntegerField()
     disponivel = models.BooleanField(default=True)
     ano_publicação = models.CharField(max_length=200)
 
@@ -20,7 +20,7 @@ class Livro(models.Model):
 
 
 class Reserva(models.Model):
-    usuario = models.ForeignKey(User, on_delete=models.CASCADE)
+    usuario = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     livro = models.ForeignKey(Livro, on_delete=models.CASCADE)
     data_reserva = models.DateTimeField('Data Reserva', default=timezone.now)
     data_retirada = models.DateField(null=True, blank=True)
@@ -34,7 +34,7 @@ class Reserva(models.Model):
         return "✅ Ativa" if self.ativo else "❌ Cancelada"
 
 class Emprestimo(models.Model):
-    usuario = models.ForeignKey(User, on_delete=models.CASCADE)
+    usuario = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     livro = models.ForeignKey(Livro, on_delete=models.CASCADE)
     data_emprestimo = models.DateTimeField(auto_now_add=True)
     data_devolucao = models.DateTimeField(null=True, blank=True)
