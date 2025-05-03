@@ -64,7 +64,7 @@ def cancelar_reserva(request, reserva_id):
 
         messages.success(request, "Reserva cancelada com sucesso.")
     else:
-        messages.warning(request, "Esta reserva já foi cancelada.")
+        messages.error(request, "Esta reserva já foi cancelada.")
 
     return redirect('minhas_reservas')
 
@@ -107,7 +107,7 @@ def devolver_livro(request, emprestimo_id):
 
         messages.success(request, "Livro devolvido com sucesso.")
     else:
-        messages.warning(request, "Este livro já foi devolvido.")
+        messages.error(request, "Este livro já foi devolvido.")
     return redirect('meus_emprestimos')
 
 def renovar_emprestimo(request, emprestimo_id):
@@ -118,10 +118,18 @@ def renovar_emprestimo(request, emprestimo_id):
         emprestimo.save()
         messages.success(request, "Empréstimo renovado por mais 7 dias.")
     else:
-        messages.warning(request, "Não é possível renovar este empréstimo.")
+        messages.error(request, "Não é possível renovar este empréstimo.")
     return redirect('meus_emprestimos')
+
 
 def meus_emprestimos(request):
     emprestimos = Emprestimo.objects.filter(usuario=request.user).order_by('-data_emprestimo')
-    return render(request, 'core/meus_emprestimos.html', {'emprestimos': emprestimos})
+    emprestimos_ativos = Emprestimo.objects.filter(usuario=request.user, data_devolucao__isnull=True).order_by('-data_emprestimo')
+    emprestimos_concluidos = Emprestimo.objects.filter(usuario=request.user, data_devolucao__isnull=False).order_by('-data_devolucao')
+
+    return render(request, 'core/meus_emprestimos.html', {
+        'emprestimos_ativos': emprestimos_ativos,
+        'emprestimos_concluidos': emprestimos_concluidos,
+        'emprestimos': emprestimos,
+    })
 

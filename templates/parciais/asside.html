@@ -78,7 +78,7 @@
               </li>
             </ul>
           </li>-->
-
+          {% if request.user.is_authenticated and request.user.is_superuser %}
           <li class="nav-item">
             <a href="#" class="nav-link">
               <i class="nav-icon fas fa-edit"></i>
@@ -94,6 +94,7 @@
                   <p>Livro</p>
                 </a>
               </li>
+               {% endif %}
               <li class="nav-item">
                 <a href="pages/forms/advanced.html" class="nav-link">
                   <i class="far fa-circle nav-icon"></i>

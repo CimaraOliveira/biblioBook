@@ -1,23 +1,232 @@
-<h2>📚 Meus Empréstimos</h2>
+{% extends 'base.html' %}
+{%block conteudo%}
 
-<ul>
-  {% for emp in emprestimos %}
-    <li>
-      {{ emp.livro.titulo }} -
-      {% if emp.data_devolucao %}
-        <span style="color: green;">Devolvido em {{ emp.data_devolucao|date:"d/m/Y" }}</span>
-      {% else %}
-        <span style="color: orange;">
-          Em andamento ({{ emp.data_emprestimo|date:"d/m/Y" }})
-          {% if emp.esta_atrasado %}❗ Atrasado{% endif %}
-        </span> —
-        <a href="{% url 'devolver_livro' emp.id %}">Devolver</a>
-        {% if not emp.renovado %}
-          | <a href="{% url 'renovar_emprestimo' emp.id %}">Renovar</a>
-        {% endif %}
-      {% endif %}
-    </li>
-  {% empty %}
-    <li>Você não possui empréstimos.</li>
-  {% endfor %}
-</ul>
+
+<!-- Main content -->
+<section class="content">
+
+    <!-- Default box -->
+    <div class="card">
+        <div class="card-header">
+            <h3 class="card-title">Emprestimo Ativo</h3>
+        </div>
+
+        <div class="card-body p-0">
+            <table class="table table-striped projects">
+                <thead>
+                <tr>
+                    <th style="width: 1%">
+                        #
+                    </th>
+
+                    <th style="width: 8%">
+                        Autor
+                    </th>
+
+                    <th style="width: 25%">
+                        Título
+                    </th>
+                    <th style="width: 8%">
+                        Isbn
+                    </th>
+                    <th style="width: 8%" class="text-center">
+                        Status
+                    </th>
+
+                    <th style="width: 20%" class="text-center">
+                        Data Retirada
+                    </th>
+
+                    <th style="width: 20%">
+                        Data Devolução
+                    </th>
+                </tr>
+                </thead>
+
+                {% for emprestimos in emprestimos_ativos %}
+
+                <tbody>
+                <tr>
+                    <td>
+                        {{emprestimos.usuario}}
+                    </td>
+                    <td>
+                        <a>
+                            {{emprestimos_ativos.data_emprestimo}}
+                        </a>
+                        <br/>
+                        <small>
+                            {{emprestimos.data_reserva|date:"d/m/Y H:i" }}
+                        </small>
+                    </td>
+                    <td>
+                        <a>
+                            {{emprestimos.livro.titulo}}
+                        </a>
+                    </td>
+                    <td>
+                        <a>
+                            {{emprestimos.livro.isbn}}
+                        </a>
+                    </td>
+                    <td>
+                        <a>
+                            {{emprestimos.livro.status_display}}
+
+                        </a>
+                    </td>
+                    <td>
+                        <a>
+                            {% if emprestimos.esta_atrasado %}
+                            <span style="color: red;">Atrasado</span>
+                            {% endif %}
+                        </a>
+                    </td>
+                    <td>
+                        <a>
+                            {{emprestimos.livro.data_retirada|date:"d/m/Y H:i" }}
+                        </a>
+                    </td>
+                    <td class="project-actions text-right">
+                        <a class="btn btn-primary btn-sm" href="{% url 'devolver_livro' emprestimos.id %}">
+                            <i class="fas fa-undo-alt"></i> Devolver
+                        </a>
+
+                        {% if not emprestimos.renovado %}
+                        <a class="btn btn-info  btn-sm ml-1" href="{% url 'renovar_emprestimo' emprestimos.id %}">
+                            <i class="fas fa-sync-alt"></i> Renovar
+                        </a>
+                        {% endif %}
+                    </td>
+
+
+                    {% empty %}
+                    <td style="width: 200%" class="text-center">
+                        <a>
+                            Você ainda não possui emprestimos! {{request.user}}
+                        </a>
+                    </td>
+
+
+                    {% endfor %}
+
+
+                </tbody>
+            </table>
+        </div>
+
+        <!-- /.card-body -->
+    </div>
+    <!-- /.card -->
+
+</section>
+
+<section class="content">
+
+    <!-- Default box -->
+    <div class="card">
+        <div class="card-header">
+            <h3 class="card-title">Histórico de Emprestimos</h3>
+        </div>
+
+        <div class="card-body p-0">
+            <table class="table table-striped projects">
+                <thead>
+                <tr>
+                    <th style="width: 1%">
+                        #
+                    </th>
+
+                    <th style="width: 8%">
+                        Autor
+                    </th>
+
+                    <th style="width: 25%">
+                        Título
+                    </th>
+                    <th style="width: 8%">
+                        Isbn
+                    </th>
+                    <th style="width: 8%" class="text-center">
+                        Status
+                    </th>
+
+                    <th style="width: 8%" class="text-center">
+                        Data Retirada
+                    </th>
+
+                    <th style="width: 8%">
+                        Data Devolução
+                    </th>
+                </tr>
+                </thead>
+
+                {% for emprestimos_concluidos in emprestimos_concluidos %}
+                <tbody>
+                <tr>
+                    <td>
+                        {{emprestimos_concluidos.id}}
+                    </td>
+                    <td>
+                        <a>
+                            {{emprestimos_concluidos.livro.autor}}
+                        </a>
+                        <br/>
+                        <small>
+                            {{emprestimos_concluidos.data_reserva|date:"d/m/Y H:i" }}
+                        </small>
+                    </td>
+                    <td>
+                        <a>
+                            {{emprestimos_concluidos.livro.titulo}}
+                        </a>
+                    </td>
+                    <td>
+                        <a>
+                            {{emprestimos_concluidos.livro.isbn}}
+                        </a>
+                    </td>
+                    <td>
+                        <a>
+                            {% if reserva.ativo %}
+                            <span style="color: green;"> ✅Ativo</span>
+                            {% else %}
+                            <span style="color: red;"> ❌Devolvido</span>
+                            {% endif %}
+
+                        </a>
+                    </td>
+
+
+                    <td>
+                        <a>
+                            {{emprestimos_concluidos.data_retirada}}
+                        </a>
+                    </td>
+                    <td>
+                        <a>
+                            {{emprestimos_concluidos.data_devolucao|date:"d/m/Y H:i" }}
+                        </a>
+                    </td>
+
+                    {% empty %}
+                    <td style="width: 200%" class="text-center">
+                        <a>
+                            Você não possui histórico de reservas!
+                        </a>
+                    </td>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <!-- /.card-body -->
+    </div>
+    <!-- /.card -->
+
+</section>
+<!-- /.content -->
+
+{%endblock%}
+
+
