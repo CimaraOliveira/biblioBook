@@ -9,7 +9,7 @@ class Livro(models.Model):
     titulo = models.CharField(max_length=200)
     autor = models.CharField(max_length=200)
     editora = models.CharField(max_length=100)
-    quantidade = models.IntegerField()
+    quantidade_disponivel = models.IntegerField(default=1)
     isbn = models.IntegerField()
     disponivel = models.BooleanField(default=True)
     ano_publicação = models.CharField(max_length=200)
@@ -38,7 +38,9 @@ class Emprestimo(models.Model):
     livro = models.ForeignKey(Livro, on_delete=models.CASCADE)
     data_emprestimo = models.DateTimeField(auto_now_add=True)
     data_devolucao = models.DateTimeField(null=True, blank=True)
+    data_devolucao_real = models.DateField(null=True, blank=True)
     renovado = models.BooleanField(default=False)
+    devolvido = models.BooleanField(default=False)
 
     @property
     def esta_atrasado(self):
@@ -48,3 +50,7 @@ class Emprestimo(models.Model):
     def __str__(self):
         return f"{self.usuario.username} - {self.livro.titulo}"
 
+    def esta_atrasado(self):
+        if not self.devolvido and timezone.now().date() > self.data_devolucao:
+            return True
+        return False

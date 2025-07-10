@@ -11,5 +11,8 @@ urlpatterns = [
     path('devolver/<int:emprestimo_id>/', views.devolver_livro, name='devolver_livro'),
     path('renovar/<int:emprestimo_id>/', views.renovar_emprestimo, name='renovar_emprestimo'),
     path('meus-emprestimos/', views.meus_emprestimos, name='meus_emprestimos'),
+    path('emprestimo_livro/', views.emprestimo_livro, name='emprestimo_livro'),
+    path('devolver_livro/', views.devolver_por_isbn, name='devolver_livro'),
+    path('teste/', views.teste, name='teste'),
 
 ]

@@ -1,58 +1,65 @@
 {% extends 'base.html' %}
 {%block conteudo%}
 
-<div class="card mb-3">
-    <div class="card-body register-card-body">
-      <p class="login-box-msg"><b>Registro de Livro</b></p>
+<div class="content-wrapper">
+    <div class="container mt-4">
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
 
-      <form action="{% url 'cadastro_livro' %}" method="POST">
-           {% csrf_token %}
+                <!-- Card com formulário -->
+                <div class="card border-primary shadow">
+                    <div class="card-header bg-primary text-white text-center">
+                        <h5 class="mb-0">📚 Registro de Livros</h5>
+                    </div>
+                    <div class="card-body">
+                        <form action="{% url 'cadastro_livro' %}" method="POST">
+                            {% csrf_token %}
 
-          <div class="form-group">
-              <label for="titulo">Título <span class="asteriskField">*</span></label>
-              <input class="form-control" name="titulo" id="titulo" type="text" value="{{request.POST.titulo}}"
-                     placeholder="Título do Livro" required autofocus>
-          </div>
+                            <div class="mb-3">
+                                <label for="titulo">Título <span class="asteriskField">*</span></label>
+                                <input class="form-control" name="titulo" id="titulo" type="text"
+                                       value="{{request.POST.titulo}}" placeholder="Título" required>
+                            </div>
 
-          <div class="form-group">
-              <label for="autor">Autor <span class="asteriskField">*</span></label>
-              <input class="form-control" name="autor" id="autor" type="text" value="{{request.POST.autor}}"
-                     placeholder="Autor do Livro" required autofocus>
-          </div>
+                            <div class="mb-3">
+                                <label for="autor">Autor <span class="asteriskField">*</span></label>
+                                <input class="form-control" name="autor" id="autor" type="text"
+                                       value="{{request.POST.autor}}" placeholder="Autor" required>
+                            </div>
 
-          <div class="form-group">
-              <label for="quantidade">Quantidade <span class="asteriskField">*</span></label>
-              <input class="form-control" name="quantidade" id="quantidade" type="text"  value="{{request.POST.quantidade}}"
-                     placeholder="Quantidade de Livros" required autofocus>
-          </div>
+                            <div class="mb-3">
+                                <label for="quantidade_disponivel">Quantidade <span class="asteriskField">*</span></label>
+                                <input class="form-control" name="quantidade_disponivel" id="quantidade_disponivel" type="number"
+                                       value="{{request.POST.quantidade_disponivel}}" placeholder="Quantidade disponível" required>
+                            </div>
 
-          <div class="form-group">
-              <label for="isbn">Isbn <span class="asteriskField">*</span></label>
-              <input class="form-control" name="isbn" id="isbn" type="text" value="{{request.POST.isbn}}"
-                     placeholder="Isbn do Livro" required autofocus>
-          </div>
+                            <div class="mb-3">
+                                <label for="isbn">ISBN <span class="asteriskField">*</span></label>
+                                <input class="form-control" name="isbn" id="isbn" type="text"
+                                       value="{{request.POST.isbn}}" placeholder="ISBN" required>
+                            </div>
 
-          <div class="form-group">
-              <label for="ano_publicação">Ano Publicação <span class="asteriskField">*</span></label>
-              <input class="form-control" name="ano_publicação" id="ano_publicação" type="text" value="{{request.POST.ano_publicação}}"
-                     placeholder="Ano Publicação do Livro" required autofocus>
-          </div>
-           <div class="col-4">
-            <button type="submit" class="btn btn-primary btn-block">Register</button>
-          </div>
+                            <div class="mb-4">
+                                <label for="ano_publicação">Ano de Publicação <span class="asteriskField">*</span></label>
+                                <input class="form-control" name="ano_publicação" id="ano_publicação" type="text"
+                                       value="{{request.POST.ano_publicação}}" placeholder="Ano de Publicação" required>
+                            </div>
 
-          <div class="social-auth-links text-center">
-              <a href="#" class="btn btn-block btn-primary">
-                  Cadastrar
-              </a>
-              <a href="#" class="btn btn-block btn-danger">
-                  Cancelar
-              </a>
-          </div>
+                            <div class="text-center">
+                                <button type="submit" class="btn btn-primary px-4">Cadastrar</button>
+                                <button type="reset" class="btn btn-danger px-4 ml-2">Cancelar</button>
+                            </div>
 
+                        </form>
+                    </div>
+                    <br/>
 
-      </form>
+                </div>
+                <br/>
+                        <br/>
+                <!-- /Formulário -->
+            </div>
+        </div>
     </div>
 </div>
-
 {%endblock%}

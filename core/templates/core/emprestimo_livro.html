@@ -1,0 +1,49 @@
+{% extends 'base.html' %}
+{% block conteudo %}
+
+<div class="content-wrapper">
+    <div class="container mt-4">
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                {% include 'parciais/messages.html' %}
+                <br/>
+                <div class="card border-primary shadow">
+                    <div class="card-header bg-primary text-white text-center">
+                        <h5 class="mb-0">📖 Empréstimo de Livro</h5>
+                    </div>
+
+                    <div class="card-body">
+                        <form method="POST">
+                            {% csrf_token %}
+
+                            <div class="mb-3">
+                                <label for="cpf">Matrícula <span class="asteriskField">*</span></label>
+                                <input class="form-control" type="text" name="cpf" id="cpf"
+                                       value="{{ request.POST.cpf }}" placeholder="Matrícula do Aluno" required
+                                       autofocus>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="isbn">ISBN <span class="asteriskField">*</span></label>
+                                <input class="form-control" name="isbn" id="isbn" type="text"
+                                       value="{{ request.POST.isbn }}" placeholder="ISBN do Livro" required autofocus>
+                            </div>
+
+                            <div class="text-center mt-4">
+                                <button type="submit" class="btn btn-primary px-4">Realizar Empréstimo</button>
+                                <button type="reset" class="btn btn-danger px-4 ml-2">Cancelar</button>
+                            </div>
+
+                        </form>
+                    </div>
+                    <br/>
+                </div>
+                <br/>
+                <br/>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
